@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import '../lib/atom.dart';
-
 class Atom {
   final String symbol;
 
@@ -25,9 +23,4 @@ class Atom {
 
   @override
   String toString() => symbol;
-}
-
-void main() {
-  var x = Atom("Xe");
-  print(x);
 }

@@ -1,4 +1,5 @@
-import '../lib/periodic_table.dart';
+import 'dart:convert';
+import 'dart:io';
 
 class Molecule implements Comparable<Molecule> {
   final String formula;
@@ -15,23 +16,83 @@ class Molecule implements Comparable<Molecule> {
     }
   }
 
-  double get weight {
-    double totalWeight = 0.0;
+  int get weight {
+    return calculateFormulaWeight(formula, loadElementsJson());
+  }
 
-    for (int i = 0; i < formula.length; i++) {
-      String currentSymbol = formula[i];
-      String nextSymbol = (i + 1 < formula.length) ? formula[i + 1] : '';
-      String combinedSymbol = currentSymbol + nextSymbol;
+  Map<String, dynamic> loadElementsJson() {
+    final jsonData = File('elements.json').readAsStringSync();
+    final dynamic decodedData = jsonDecode(jsonData);
 
-      if (PeriodicTable.elements.containsKey(combinedSymbol)) {
-        totalWeight += PeriodicTable.elements[combinedSymbol]!.weight;
-        i++;
-      } else {
-        totalWeight += PeriodicTable.elements[currentSymbol]!.weight;
+    if (decodedData is List) {
+      final Map<String, dynamic> elementsMap = {};
+      for (final element in decodedData) {
+        final symbol = element['symbol'] as String;
+        elementsMap[symbol] = element;
       }
+      return elementsMap;
+    } else if (decodedData is Map) {
+      return decodedData.cast<String, dynamic>();
+    } else {
+      throw Exception('Formato de JSON não suportado');
+    }
+  }
+
+  int calculateFormulaWeight(
+      String formula, Map<String, dynamic> elementsJson) {
+    int totalWeight = 0;
+
+    int currentIndex = 0;
+    while (currentIndex < formula.length) {
+      String currentSymbol = formula[currentIndex];
+
+      int nextIndex = currentIndex + 1;
+      while (
+          nextIndex < formula.length && isLowerCaseLetter(formula[nextIndex])) {
+        currentSymbol += formula[nextIndex];
+        nextIndex++;
+      }
+
+      String numericPart = '';
+      while (nextIndex < formula.length && isNumeric(formula[nextIndex])) {
+        numericPart += formula[nextIndex];
+        nextIndex++;
+      }
+
+      int atomCount = numericPart.isNotEmpty ? int.parse(numericPart) : 1;
+
+      int elementWeight = findWeightBySymbol(currentSymbol, elementsJson);
+      totalWeight += elementWeight * atomCount;
+
+      currentIndex = nextIndex;
     }
 
     return totalWeight;
+  }
+
+  int findWeightBySymbol(String symbol, Map<String, dynamic> elementsJson) {
+    final element = elementsJson[symbol];
+
+    if (element != null) {
+      final weight = element['weight'];
+      if (weight is int) {
+        return weight;
+      } else if (weight is String) {
+        return int.parse(weight);
+      } else {
+        throw Exception('Formato de peso inválido para o símbolo: $symbol');
+      }
+    } else {
+      throw Exception('Elemento não encontrado para o símbolo: $symbol');
+    }
+  }
+
+  bool isNumeric(String s) {
+    return int.tryParse(s) != null;
+  }
+
+  bool isLowerCaseLetter(String s) {
+    return RegExp(r'[a-z]').hasMatch(s);
   }
 
   @override
@@ -39,30 +100,3 @@ class Molecule implements Comparable<Molecule> {
     return weight.compareTo(other.weight);
   }
 }
-
-void main() {
-  var water = Molecule(formula: "h2o", name: "water");
-  print(water.weight);
-}
-
-
-
-/*class Molecule {
-  final String formula;
-  final String name;
-
-  Molecule(this.formula, this.name) {
-    if (!isValidFormula(formula)) {
-      throw Exception("Invalid formula for molecule: $formula");
-    }
-  }
-
-  bool isValidFormula(String formula) {
-    RegExp regExp = RegExp(r'^[A-Za-z0-9]+$');
-    return regExp.hasMatch(formula);
-  }
-}
-
-void main(){
-  var x = Molecule("h(2o", "agua");
-}*/

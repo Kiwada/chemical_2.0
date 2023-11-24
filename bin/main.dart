@@ -16,7 +16,6 @@
  * adaptarem ao seu projeto
  */
 import 'dart:io';
-import '../lib/atom.dart';
 import '../lib/periodic_table.dart';
 import '../lib/molecule.dart';
 
@@ -149,7 +148,7 @@ void main() {
   // Exibe uma tabela com a fórmula e peso das
   // moléculas da lista em ordem natural (mesma ordem da lista)
   showMolecules(molecules);
-/*
+
   // Ordena as moléculas da lista em ordem crescente de peso atômico
   // Método sort() utiliza implementação da interface "Comparable<Molecule>"
   molecules.sort();
@@ -161,5 +160,5 @@ void main() {
   // Tenta criar moléculas com fórmulas inválidas
   createInvalidMolecule('', 'Fórmula vazia');
   createInvalidMolecule('H2O1', 'Fórmula inválida da água: "1"');
-  createInvalidMolecule('G2H5', 'Fórmula com elemento inválido: "G"');*/
+  createInvalidMolecule('G2H5', 'Fórmula com elemento inválido: "G"');
 }

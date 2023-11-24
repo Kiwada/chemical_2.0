@@ -128,9 +128,9 @@ NaCl               28
 H2SO4              50
 NaHCO3             42
 C6H12O6            96
-C2H3O2NH4          39
+C2H3O2NH4          42
 C12H22N2O4        140
-C4H4O6KNa4H2O      97
+C4H4O6KNa4H2O     149
 ----------------------------------------
 FORMULA        WEIGHT
 F                   9
@@ -138,13 +138,13 @@ H2O                10
 O2                 16
 NaCl               28
 Br                 35
-C2H3O2NH4          39
 NaHCO3             42
+C2H3O2NH4          42
 H2SO4              50
 Br2                70
 C6H12O6            96
-C4H4O6KNa4H2O      97
 C12H22N2O4        140
+C4H4O6KNa4H2O     149
 ----------------------------------------
 Fórmula inválida: "" (Fórmula vazia)
 Fórmula inválida: A classe deveria ter levantado uma exceção: "H2O1"
