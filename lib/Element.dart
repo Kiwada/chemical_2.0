@@ -1,18 +1,15 @@
-class Element{
-   final String symbol;
-   final String name;
-   final String latinName;
-   final int wight;
+import '../lib/atom.dart';
 
-   Element(this.symbol,this.name,this.latinName,this.wight){
-    if(!isValidSymbol(symbol)){
-      throw Exception(('Símbolo inválida: $symbol'));
-    }
+class Element {
+  final Atom symbol;
+  final String name;
+  final String latinName;
+  final int weight;
 
-   }
-     bool isValidSymbol(String string){
-      return symbol.isNotEmpty;
-     }
-   
-
+  Element(
+      {required symbol,
+      required this.name,
+      required this.latinName,
+      required this.weight})
+      : symbol = Atom(symbol);
 }

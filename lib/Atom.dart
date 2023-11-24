@@ -1,33 +1,33 @@
+import 'dart:convert';
+import 'dart:io';
+
+import '../lib/atom.dart';
+
 class Atom {
   final String symbol;
 
-  Atom({required this.symbol}) {
+  Atom(this.symbol) {
     if (!isValidSymbol(symbol)) {
-      throw ArgumentError('Símbolo de átomo inválido: $symbol');
+      throw Exception("Invalid symbol for Atom");
     }
   }
 
   bool isValidSymbol(String symbol) {
-    return symbol.isNotEmpty;
+    final jsonData = jsonDecode(File('elements.json').readAsStringSync());
+
+    for (var s in jsonData) {
+      if (s['symbol'].toString() == symbol) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @override
-  String toString() {
-    return 'Atom(symbol: $symbol)';
-  }
+  String toString() => symbol;
 }
 
 void main() {
-  try {
-    final hidrogenio = Atom(symbol: 'H');
-    final oxigenio = Atom(symbol: 'O');
-    final carbono = Atom(symbol: 'C');
-    
-    print(hidrogenio);
-    print(oxigenio);
-    print(carbono);
-
-  } catch (e) {
-    print('Erro: $e');
-  }
+  var x = Atom("Xe");
+  print(x);
 }
